@@ -5,6 +5,12 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@plasmohq/messaging':
+    specifier: ^0.6.2
+    version: 0.6.2(react@18.2.0)
+  '@plasmohq/storage':
+    specifier: ^1.12.0
+    version: 1.12.0(react@18.2.0)
   plasmo:
     specifier: 0.89.3
     version: 0.89.3(react-dom@18.2.0)(react@18.2.0)
@@ -1970,6 +1976,18 @@ packages:
     resolution: {integrity: sha512-P75g48dqOGneJ+n0AcqnLE/TYflcaPc3B7h6EopnCBBYUDnCNBMwYmKAkaf5pnhsEB0ybPS6TU1C2DTGfqaW7A==}
     dev: false
 
+  /@plasmohq/messaging@0.6.2(react@18.2.0):
+    resolution: {integrity: sha512-CGfcvfVE0wsN/Y/i/jV0nwjkwh2gBCEujZFhLoxJ12N0ScoP3JVEIvUxJSFsAD4ylBQ8IjD2FyjQozwiSxWc4Q==}
+    peerDependencies:
+      react: ^16.8.6 || ^17 || ^18
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      nanoid: 5.0.3
+      react: 18.2.0
+    dev: false
+
   /@plasmohq/parcel-bundler@0.5.6:
     resolution: {integrity: sha512-kjwj5tQUhdAK00AxXOzgqJ2jryZg4X6aleYAcjbREPzVMqKEu1NrNSNy5VGAfNRG6NCT6ZYg39ZCyuUOR2lEsQ==}
     engines: {node: '>= 16.0.0', parcel: '>= 2.7.0'}
@@ -2310,6 +2328,18 @@ packages:
       - velocityjs
       - walrus
       - whiskers
+    dev: false
+
+  /@plasmohq/storage@1.12.0(react@18.2.0):
+    resolution: {integrity: sha512-LoCyO0PXl609ee8QKVEwVpkTyD/8WjYQhd0sxFomLxbdxsZC0LD4n8nv4nSegP5X8lYQBQnR/LMq4ZXoQh87wA==}
+    peerDependencies:
+      react: ^16.8.6 || ^17 || ^18
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      pify: 6.1.0
+      react: 18.2.0
     dev: false
 
   /@pnpm/config.env-replace@1.1.0:
@@ -4655,6 +4685,12 @@ packages:
     hasBin: true
     dev: false
 
+  /nanoid@5.0.3:
+    resolution: {integrity: sha512-I7X2b22cxA4LIHXPSqbBCEQSL+1wv8TuoefejsX4HFWyC6jc5JG7CEaxOltiKjc1M+YCS2YkrZZcj4+dytw9GA==}
+    engines: {node: ^18 || >=20}
+    hasBin: true
+    dev: false
+
   /napi-build-utils@1.0.2:
     resolution: {integrity: sha512-ONmRUqK7zj7DWX0D9ADe03wbwOBZxNAfF20PlGfCWQcD3+/MakShIHrMqx9YwPTfxDdF1zLeL+RGZiR9kGMLdg==}
     dev: false
@@ -4864,6 +4900,11 @@ packages:
     engines: {node: '>=6'}
     dev: false
     optional: true
+
+  /pify@6.1.0:
+    resolution: {integrity: sha512-KocF8ve28eFjjuBKKGvzOBGzG8ew2OqOOSxTTZhirkzH7h3BI1vyzqlR0qbfcDBve1Yzo3FVlWUAtCRrbVN8Fw==}
+    engines: {node: '>=14.16'}
+    dev: false
 
   /pirates@4.0.6:
     resolution: {integrity: sha512-saLsH7WeYYPiD25LDuLRRY/i+6HaPYr6G1OUlN39otzkSTxKnubR9RTxS3/Kk50s1g2JTgFwWQDQyplC5/SHZg==}

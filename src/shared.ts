@@ -7,8 +7,9 @@ export const domains = [
 
 export const rootDomain = "x.com"
 
-// TODO: improve this
-export type StorageKey = "headers"
+export const storageKeys = {
+  headers: "headers"
+}
 
 export type Rules = {
   /**
@@ -43,6 +44,7 @@ export type User = {
 
 export type Bot = User & {
   matchedRule: MatchedRule
+  ratio: number
 }
 
 export type Cursor = string | undefined

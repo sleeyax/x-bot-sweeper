@@ -1,16 +1,98 @@
+// TODO: Proper tree-shaking is broken at the moment. See: https://github.com/PlasmoHQ/plasmo/issues/997.
+// import {} from "antd"
+import Button from "antd/es/button"
+import Flex from "antd/es/flex"
+import Image from "antd/es/image"
+import Select from "antd/es/select"
+import Table, { type ColumnsType as TableColumnsType } from "antd/es/table"
+import type { TableRowSelection } from "antd/es/table/interface"
+import Tooltip from "antd/es/tooltip"
+import Typography from "antd/es/typography"
+import sweeperImage from "data-base64:~../assets/sweeper.png"
+import xLogo from "data-base64:~../assets/x-logo.png"
+
 import { sendToBackground } from "@plasmohq/messaging"
 import { Storage } from "@plasmohq/storage"
 import { useStorage } from "@plasmohq/storage/hook"
-
-import { rootDomain, type Bot, type Rules } from "~shared"
-
-import "~styles/reset.css"
-import "~styles/global.css"
 
 import type {
   BlockBotsRequest,
   BlockBotsResponse
 } from "~background/messages/block-bots"
+import { rootDomain, type Bot, type Rules } from "~shared"
+import { ThemeProvider } from "~theme"
+import { toFullSizeImage } from "~utils"
+
+const { Title, Link } = Typography
+
+type DataType = Bot
+
+const columns: TableColumnsType<DataType> = [
+  {
+    title: "Profile",
+    dataIndex: "profileImage",
+    render: (imageUrl: string) => (
+      <Image
+        src={toFullSizeImage(imageUrl)}
+        width={50}
+        height={50}
+        alt="profile image"
+        style={{ borderRadius: "50%" }}
+      />
+    )
+  },
+  {
+    title: "Name",
+    dataIndex: "name",
+    render: (_, row) => (
+      <>
+        <strong>{row.name}</strong>
+        <br />
+        <Link
+          href={`https://${rootDomain}/${row.username}`}
+          target="_blank"
+          style={{ fontSize: 11 }}>
+          @{row.username}
+        </Link>
+      </>
+    )
+  },
+  {
+    title: "Account Date",
+    dataIndex: "createdAt",
+    ellipsis: true,
+    render: (date) => (
+      <span title={date}>
+        {new Intl.DateTimeFormat().format(new Date(date))}
+      </span>
+    )
+  },
+  { title: "Following", dataIndex: "followingCount" },
+  { title: "Followers", dataIndex: "followersCount" },
+  {
+    title: () => (
+      <Tooltip
+        title="The following to followers ratio (calculated as following /
+          followers).">
+        <span>Ratio (?)</span>
+      </Tooltip>
+    ),
+    dataIndex: "ratio",
+    ellipsis: true,
+    render: (ratio: number) => ratio.toFixed(2)
+  },
+  {
+    title: "Reason",
+    dataIndex: "matchedRule",
+    render: (rule) => (
+      <span style={{ fontSize: 11 }}>
+        {rule === "followingToFollowersRatio"
+          ? "Suspicious ratio"
+          : "Banned keywords"}
+      </span>
+    )
+  }
+]
 
 function IndexPopup() {
   const [bots, setBots] = useStorage<Bot[]>(
@@ -22,10 +104,14 @@ function IndexPopup() {
     },
     []
   )
-  const [checkedBotIds, setCheckedBotIds] = useStorage<string[]>(
+  const [selectedRows, setSelectedRows] = useStorage<string[]>(
     "checkedBotIds",
     []
   )
+
+  const onSelectChange = (newSelectedRowKeys: string[]) => {
+    setSelectedRows(newSelectedRowKeys)
+  }
 
   const findRecentBots = async () => {
     const res = await sendToBackground<Rules>({
@@ -41,105 +127,69 @@ function IndexPopup() {
       BlockBotsResponse
     >({
       name: "block-bots",
-      body: { botIds: checkedBotIds, timeout: 2500 }
+      body: { botIds: selectedRows, timeout: 2500 }
     })
     console.log("failedBlocks", failedBlocks)
     console.log("succeededBlocks", succeededBlocks)
     setBots((state) => state.filter((bot) => !succeededBlocks.includes(bot.id)))
-    setCheckedBotIds((state) =>
+    setSelectedRows((state) =>
       state.filter((botId) => !succeededBlocks.includes(botId))
     )
   }
 
+  const rowSelection: TableRowSelection<DataType> = {
+    selectedRowKeys: selectedRows,
+    onChange: onSelectChange
+  }
+
   return (
-    <div
-      style={{
-        width: 500,
-        padding: 16
-      }}>
-      <h2>X Bot Sweeper</h2>
-      <button onClick={findRecentBots}>Scan recent followers</button>
-      <button onClick={findRecentBots}>Scan all followers</button>
-      <button onClick={() => setCheckedBotIds([])}>breh</button>
-      {checkedBotIds.length > 0 && (
-        <button onClick={blockBots} style={{ float: "right" }}>
-          Block {checkedBotIds.length} bot(s)
-        </button>
-      )}
+    <ThemeProvider>
+      <Flex align="center" vertical>
+        <Flex align="center" justify="center" gap={4}>
+          <img src={sweeperImage} width={40} height={40} alt="Sweeper image" />
+          <Title level={1} style={{ margin: 0, padding: 0 }}>
+            Bot Sweeper for
+          </Title>
+          <img src={xLogo} width={30} height={30} alt="X logo image" />
+        </Flex>
+        <strong>
+          developed by{" "}
+          <Link href={`https://${rootDomain}/sleeyax`} target="_blank">
+            @sleeyax
+          </Link>
+        </strong>
+      </Flex>
+      <Flex gap={4} style={{ marginTop: 10, marginBottom: 10 }}>
+        {selectedRows.length > 0 && (
+          <Button type="primary" danger onClick={blockBots}>
+            Block {selectedRows.length} bot(s)
+          </Button>
+        )}
+        <Flex style={{ marginLeft: "auto" }} gap={4}>
+          <Select
+            defaultValue="recent"
+            options={[
+              { value: "recent", label: "Recent followers" },
+              { value: "all", label: "All followers" }
+            ]}
+            style={{ width: 150 }}
+          />
+          <Button type="primary" onClick={findRecentBots}>
+            Scan
+          </Button>
+        </Flex>
+      </Flex>
       {bots.length > 0 && (
-        <table>
-          <thead>
-            <tr>
-              <th colSpan={2}>User</th>
-              <th>Matched rule</th>
-              <th>Following</th>
-              <th>Followers</th>
-              <th>Ratio</th>
-              <th>
-                <input
-                  type="checkbox"
-                  onChange={(e) =>
-                    setCheckedBotIds(
-                      e.target.checked ? bots.map((bot) => bot.id) : []
-                    )
-                  }
-                />
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {bots.map((bot) => (
-              <tr key={bot.id}>
-                <td
-                  style={{
-                    width: 40,
-                    borderRight: 0
-                  }}>
-                  <a
-                    href={`https://${rootDomain}/${bot.username}`}
-                    target="_blank"
-                    rel="noopener noreferrer">
-                    <img
-                      style={{
-                        borderRadius: "50%"
-                      }}
-                      src={bot.profileImage}
-                      alt={bot.username}
-                    />
-                  </a>
-                </td>
-                <td>
-                  <strong>{bot.name}</strong>
-                  <p>@{bot.username}</p>
-                </td>
-                <td>
-                  {bot.matchedRule === "followingToFollowersRatio" &&
-                    "Suspicious following to followers ratio"}
-                  {bot.matchedRule === "bannedKeywords" &&
-                    "Found banned keywords in bio"}
-                </td>
-                <td>{bot.followingCount}</td>
-                <td>{bot.followersCount}</td>
-                <td>{(bot.followingCount / bot.followersCount).toFixed(2)}</td>
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={checkedBotIds.includes(bot.id)}
-                    onChange={(e) =>
-                      e.target.checked
-                        ? setCheckedBotIds((state) => [...state, bot.id])
-                        : setCheckedBotIds((state) =>
-                            state.filter((v) => v !== bot.id)
-                          )
-                    }
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <Table
+          tableLayout="auto"
+          rowSelection={rowSelection}
+          columns={columns}
+          dataSource={bots}
+          rowKey={(record) => record.id}
+          pagination={{ pageSize: 100 }}
+        />
       )}
-    </div>
+    </ThemeProvider>
   )
 }
 

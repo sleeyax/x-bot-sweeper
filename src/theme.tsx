@@ -1,5 +1,5 @@
 import ConfigProvider from "antd/es/config-provider"
-import type { PropsWithChildren, ReactNode } from "react"
+import type { PropsWithChildren } from "react"
 
 export type ThemeProviderProps = PropsWithChildren
 

@@ -1,12 +1,13 @@
-import {
-  Button,
-  Flex,
-  Image,
-  Table,
-  Typography,
-  type TableColumnsType
-} from "antd"
+// TODO: Proper tree-shaking is broken at the moment. See: https://github.com/PlasmoHQ/plasmo/issues/997.
+// import {} from "antd"
+import Button from "antd/es/button"
+import Flex from "antd/es/flex"
+import Image from "antd/es/image"
+import Select from "antd/es/select"
+import Table, { type ColumnsType as TableColumnsType } from "antd/es/table"
 import type { TableRowSelection } from "antd/es/table/interface"
+import Tooltip from "antd/es/tooltip"
+import Typography from "antd/es/typography"
 import sweeperImage from "data-base64:~../assets/sweeper.png"
 import xLogo from "data-base64:~../assets/x-logo.png"
 
@@ -30,7 +31,6 @@ const columns: TableColumnsType<DataType> = [
   {
     title: "Profile",
     dataIndex: "profileImage",
-    width: 50,
     render: (imageUrl: string) => (
       <Image
         src={toFullSizeImage(imageUrl)}
@@ -44,46 +44,52 @@ const columns: TableColumnsType<DataType> = [
   {
     title: "Name",
     dataIndex: "name",
-    width: 100,
     render: (_, row) => (
       <>
-        <p>
-          <strong>{row.name}</strong>
-        </p>
-        <Link href={`https://${rootDomain}/${row.username}`} target="_blank">
+        <strong>{row.name}</strong>
+        <br />
+        <Link
+          href={`https://${rootDomain}/${row.username}`}
+          target="_blank"
+          style={{ fontSize: 11 }}>
           @{row.username}
         </Link>
       </>
     )
   },
   {
-    title: "Account Created At",
+    title: "Account Date",
     dataIndex: "createdAt",
-    width: 100,
+    ellipsis: true,
     render: (date) => (
       <span title={date}>
         {new Intl.DateTimeFormat().format(new Date(date))}
       </span>
     )
   },
-  { title: "Followers", dataIndex: "followersCount", width: 50 },
-  { title: "Following", dataIndex: "followingCount", width: 50 },
+  { title: "Following", dataIndex: "followingCount" },
+  { title: "Followers", dataIndex: "followersCount" },
   {
-    title: "Ratio",
+    title: () => (
+      <Tooltip
+        title="The following to followers ratio (calculated as following /
+          followers).">
+        <span>Ratio (?)</span>
+      </Tooltip>
+    ),
     dataIndex: "ratio",
-    width: 50,
+    ellipsis: true,
     render: (ratio: number) => ratio.toFixed(2)
   },
   {
-    title: "Matched Rule",
+    title: "Reason",
     dataIndex: "matchedRule",
-    width: 100,
     render: (rule) => (
-      <>
+      <span style={{ fontSize: 11 }}>
         {rule === "followingToFollowersRatio"
-          ? "Suspicious following to followers ratio"
-          : "Found banned keywords"}
-      </>
+          ? "Suspicious ratio"
+          : "Banned keywords"}
+      </span>
     )
   }
 ]
@@ -153,30 +159,34 @@ function IndexPopup() {
           </Link>
         </strong>
       </Flex>
-      <Flex gap={4} style={{ marginTop: 10, marginBottom: 10, width: "100%" }}>
-        <Button type="primary" onClick={findRecentBots}>
-          Scan recent followers
-        </Button>
-        <Button type="primary" onClick={findRecentBots}>
-          Scan all followers
-        </Button>
+      <Flex gap={4} style={{ marginTop: 10, marginBottom: 10 }}>
         {selectedRows.length > 0 && (
-          <Button
-            type="primary"
-            danger
-            onClick={blockBots}
-            style={{ marginLeft: "auto" }}>
+          <Button type="primary" danger onClick={blockBots}>
             Block {selectedRows.length} bot(s)
           </Button>
         )}
+        <Flex style={{ marginLeft: "auto" }} gap={4}>
+          <Select
+            defaultValue="recent"
+            options={[
+              { value: "recent", label: "Recent followers" },
+              { value: "all", label: "All followers" }
+            ]}
+            style={{ width: 150 }}
+          />
+          <Button type="primary" onClick={findRecentBots}>
+            Scan
+          </Button>
+        </Flex>
       </Flex>
       {bots.length > 0 && (
         <Table
+          tableLayout="auto"
           rowSelection={rowSelection}
           columns={columns}
           dataSource={bots}
           rowKey={(record) => record.id}
-          pagination={{pageSize: 100}}
+          pagination={{ pageSize: 100 }}
         />
       )}
     </ThemeProvider>

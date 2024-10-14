@@ -1,6 +1,6 @@
 import { Storage } from "@plasmohq/storage"
 
-import { domains, rootDomain, type StorageKey } from "~shared"
+import { domains, rootDomain, storageKeys } from "~shared"
 
 import { getCookies } from "./utils"
 
@@ -25,7 +25,7 @@ chrome.webRequest.onSendHeaders.addListener(
       }
       console.log("intercepted headers", headers)
       // Store the result in storage for later use.
-      await storage.set("headers" satisfies StorageKey, JSON.stringify(headers))
+      await storage.set(storageKeys.headers, JSON.stringify(headers))
     }
   },
   { urls: domains },

@@ -61,13 +61,14 @@ export async function getFollowers(
     }
   })
   if (!res.ok) {
-    throw new Error(
-      `Failed to fetch followers. Status: ${res.status} ${res.statusText}. Body: ${await res.text()}`
-    )
+    throw new Error("Failed to fetch followers.")
   }
+
   const json = await res.json()
+
   const instruction = json.data.user.result.timeline.timeline.instructions.find(
-    (instruction) => instruction.type === "TimelineAddEntries"
+    (instruction: Record<string, string>) =>
+      instruction.type === "TimelineAddEntries"
   )
 
   const users: User[] = []

@@ -3,12 +3,12 @@ import { Storage } from "@plasmohq/storage"
 
 import { getFollowers } from "~api"
 import { getCookie, toJson } from "~background/utils"
-import { rootDomain, type Bot, type Rules, type StorageKey } from "~shared"
+import { rootDomain, storageKeys, type Bot, type Rules } from "~shared"
 
 const handler: PlasmoMessaging.MessageHandler<Rules> = async (req, res) => {
   const rules = req.body
   const storage = new Storage({ area: "local" })
-  const headers = await storage.get("headers" as StorageKey).then(toJson)
+  const headers = await storage.get(storageKeys.headers).then(toJson)
   const userId = await getUserId()
 
   // TODO: implement pagination

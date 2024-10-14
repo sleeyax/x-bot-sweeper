@@ -3,7 +3,7 @@ import { Storage } from "@plasmohq/storage"
 
 import { blockUser } from "~api"
 import { toJson } from "~background/utils"
-import { type StorageKey } from "~shared"
+import { storageKeys } from "~shared"
 import { sleep } from "~utils"
 
 export type BlockBotsRequest = { botIds: string[]; timeout?: number }
@@ -18,7 +18,7 @@ const handler: PlasmoMessaging.MessageHandler<
 > = async ({ body: { botIds, timeout = 2500 } }, res) => {
   const storage = new Storage({ area: "local" })
 
-  const headers = await storage.get("headers" satisfies StorageKey).then(toJson)
+  const headers = await storage.get(storageKeys.headers).then(toJson)
   if (!headers) {
     throw new Error("headers not found")
   }

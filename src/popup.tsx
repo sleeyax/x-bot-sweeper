@@ -1,16 +1,92 @@
+import {
+  Button,
+  Flex,
+  Image,
+  Table,
+  Typography,
+  type TableColumnsType
+} from "antd"
+import type { TableRowSelection } from "antd/es/table/interface"
+import sweeperImage from "data-base64:~../assets/sweeper.png"
+import xLogo from "data-base64:~../assets/x-logo.png"
+
 import { sendToBackground } from "@plasmohq/messaging"
 import { Storage } from "@plasmohq/storage"
 import { useStorage } from "@plasmohq/storage/hook"
-
-import { rootDomain, type Bot, type Rules } from "~shared"
-
-import "~styles/reset.css"
-import "~styles/global.css"
 
 import type {
   BlockBotsRequest,
   BlockBotsResponse
 } from "~background/messages/block-bots"
+import { rootDomain, type Bot, type Rules } from "~shared"
+import { ThemeProvider } from "~theme"
+import { toFullSizeImage } from "~utils"
+
+const { Title, Link } = Typography
+
+type DataType = Bot
+
+const columns: TableColumnsType<DataType> = [
+  {
+    title: "Profile",
+    dataIndex: "profileImage",
+    width: 50,
+    render: (imageUrl: string) => (
+      <Image
+        src={toFullSizeImage(imageUrl)}
+        width={50}
+        height={50}
+        alt="profile image"
+        style={{ borderRadius: "50%" }}
+      />
+    )
+  },
+  {
+    title: "Name",
+    dataIndex: "name",
+    width: 100,
+    render: (_, row) => (
+      <>
+        <p>
+          <strong>{row.name}</strong>
+        </p>
+        <Link href={`https://${rootDomain}/${row.username}`} target="_blank">
+          @{row.username}
+        </Link>
+      </>
+    )
+  },
+  {
+    title: "Account Created At",
+    dataIndex: "createdAt",
+    width: 100,
+    render: (date) => (
+      <span title={date}>
+        {new Intl.DateTimeFormat().format(new Date(date))}
+      </span>
+    )
+  },
+  { title: "Followers", dataIndex: "followersCount", width: 50 },
+  { title: "Following", dataIndex: "followingCount", width: 50 },
+  {
+    title: "Ratio",
+    dataIndex: "ratio",
+    width: 50,
+    render: (ratio: number) => ratio.toFixed(2)
+  },
+  {
+    title: "Matched Rule",
+    dataIndex: "matchedRule",
+    width: 100,
+    render: (rule) => (
+      <>
+        {rule === "followingToFollowersRatio"
+          ? "Suspicious following to followers ratio"
+          : "Found banned keywords"}
+      </>
+    )
+  }
+]
 
 function IndexPopup() {
   const [bots, setBots] = useStorage<Bot[]>(
@@ -22,10 +98,14 @@ function IndexPopup() {
     },
     []
   )
-  const [checkedBotIds, setCheckedBotIds] = useStorage<string[]>(
+  const [selectedRows, setSelectedRows] = useStorage<string[]>(
     "checkedBotIds",
     []
   )
+
+  const onSelectChange = (newSelectedRowKeys: string[]) => {
+    setSelectedRows(newSelectedRowKeys)
+  }
 
   const findRecentBots = async () => {
     const res = await sendToBackground<Rules>({
@@ -41,105 +121,65 @@ function IndexPopup() {
       BlockBotsResponse
     >({
       name: "block-bots",
-      body: { botIds: checkedBotIds, timeout: 2500 }
+      body: { botIds: selectedRows, timeout: 2500 }
     })
     console.log("failedBlocks", failedBlocks)
     console.log("succeededBlocks", succeededBlocks)
     setBots((state) => state.filter((bot) => !succeededBlocks.includes(bot.id)))
-    setCheckedBotIds((state) =>
+    setSelectedRows((state) =>
       state.filter((botId) => !succeededBlocks.includes(botId))
     )
   }
 
+  const rowSelection: TableRowSelection<DataType> = {
+    selectedRowKeys: selectedRows,
+    onChange: onSelectChange
+  }
+
   return (
-    <div
-      style={{
-        width: 500,
-        padding: 16
-      }}>
-      <h2>X Bot Sweeper</h2>
-      <button onClick={findRecentBots}>Scan recent followers</button>
-      <button onClick={findRecentBots}>Scan all followers</button>
-      <button onClick={() => setCheckedBotIds([])}>breh</button>
-      {checkedBotIds.length > 0 && (
-        <button onClick={blockBots} style={{ float: "right" }}>
-          Block {checkedBotIds.length} bot(s)
-        </button>
-      )}
+    <ThemeProvider>
+      <Flex align="center" vertical>
+        <Flex align="center" justify="center" gap={4}>
+          <img src={sweeperImage} width={40} height={40} alt="Sweeper image" />
+          <Title level={1} style={{ margin: 0, padding: 0 }}>
+            Bot Sweeper for
+          </Title>
+          <img src={xLogo} width={30} height={30} alt="X logo image" />
+        </Flex>
+        <strong>
+          developed by{" "}
+          <Link href={`https://${rootDomain}/sleeyax`} target="_blank">
+            @sleeyax
+          </Link>
+        </strong>
+      </Flex>
+      <Flex gap={4} style={{ marginTop: 10, marginBottom: 10, width: "100%" }}>
+        <Button type="primary" onClick={findRecentBots}>
+          Scan recent followers
+        </Button>
+        <Button type="primary" onClick={findRecentBots}>
+          Scan all followers
+        </Button>
+        {selectedRows.length > 0 && (
+          <Button
+            type="primary"
+            danger
+            onClick={blockBots}
+            style={{ marginLeft: "auto" }}>
+            Block {selectedRows.length} bot(s)
+          </Button>
+        )}
+      </Flex>
       {bots.length > 0 && (
-        <table>
-          <thead>
-            <tr>
-              <th colSpan={2}>User</th>
-              <th>Matched rule</th>
-              <th>Following</th>
-              <th>Followers</th>
-              <th>Ratio</th>
-              <th>
-                <input
-                  type="checkbox"
-                  onChange={(e) =>
-                    setCheckedBotIds(
-                      e.target.checked ? bots.map((bot) => bot.id) : []
-                    )
-                  }
-                />
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {bots.map((bot) => (
-              <tr key={bot.id}>
-                <td
-                  style={{
-                    width: 40,
-                    borderRight: 0
-                  }}>
-                  <a
-                    href={`https://${rootDomain}/${bot.username}`}
-                    target="_blank"
-                    rel="noopener noreferrer">
-                    <img
-                      style={{
-                        borderRadius: "50%"
-                      }}
-                      src={bot.profileImage}
-                      alt={bot.username}
-                    />
-                  </a>
-                </td>
-                <td>
-                  <strong>{bot.name}</strong>
-                  <p>@{bot.username}</p>
-                </td>
-                <td>
-                  {bot.matchedRule === "followingToFollowersRatio" &&
-                    "Suspicious following to followers ratio"}
-                  {bot.matchedRule === "bannedKeywords" &&
-                    "Found banned keywords in bio"}
-                </td>
-                <td>{bot.followingCount}</td>
-                <td>{bot.followersCount}</td>
-                <td>{(bot.followingCount / bot.followersCount).toFixed(2)}</td>
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={checkedBotIds.includes(bot.id)}
-                    onChange={(e) =>
-                      e.target.checked
-                        ? setCheckedBotIds((state) => [...state, bot.id])
-                        : setCheckedBotIds((state) =>
-                            state.filter((v) => v !== bot.id)
-                          )
-                    }
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <Table
+          rowSelection={rowSelection}
+          columns={columns}
+          dataSource={bots}
+          rowKey={(record) => record.id}
+          pagination={{pageSize: 100}}
+        />
       )}
-    </div>
+    </ThemeProvider>
   )
 }
 

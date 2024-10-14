@@ -44,6 +44,7 @@ export type User = {
 
 export type Bot = User & {
   matchedRule: MatchedRule
+  ratio: number
 }
 
 export type Cursor = string | undefined

@@ -19,13 +19,13 @@ const handler: PlasmoMessaging.MessageHandler<Rules> = async (req, res) => {
     // check follower to follow ratio
     const followingToFollowersRatio = user.followingCount / user.followersCount
     if (followingToFollowersRatio >= rules.followingToFollowersRatio) {
-      bots.push({ ...user, matchedRule: "followingToFollowersRatio" })
+      bots.push({ ...user, matchedRule: "followingToFollowersRatio", ratio: followingToFollowersRatio })
       continue
     }
 
     // check bio for banned keywords
     if (rules.bannedKeywords.some((keyword) => user.bio.includes(keyword))) {
-      bots.push({ ...user, matchedRule: "bannedKeywords" })
+      bots.push({ ...user, matchedRule: "bannedKeywords", ratio: followingToFollowersRatio })
       continue
     }
   }

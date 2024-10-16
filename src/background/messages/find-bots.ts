@@ -21,7 +21,17 @@ const handler: PlasmoMessaging.MessageHandler<
 > = async ({ body: { filter, rules } }, res) => {
   const storage = new Storage({ area: "local" })
   const headers = await storage.get(storageKeys.headers).then(toJson)
+  if (!headers) {
+    throw new Error(
+      "Missing headers. Please visit 'x.com/home' to fix this issue."
+    )
+  }
   const userId = await getUserId()
+  if (!userId) {
+    throw new Error(
+      "Failed to get your user ID. Make sure you're logged in to to X."
+    )
+  }
 
   let cursor: string | undefined
   const bots: Bot[] = []

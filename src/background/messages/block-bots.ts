@@ -20,25 +20,23 @@ const handler: PlasmoMessaging.MessageHandler<
 
   const headers = await storage.get(storageKeys.headers).then(toJson)
   if (!headers) {
-    throw new Error("headers not found")
+    throw new Error(
+      "Missing headers. Please visit 'x.com/home' to fix this issue."
+    )
   }
 
   const succeededBlocks = []
   const failedBlocks = []
   for (const botId of botIds) {
-    try {
-      const isBlocked = await blockUser(botId, headers)
+    const isBlocked = await blockUser(botId, headers)
 
-      if (isBlocked) {
-        succeededBlocks.push(botId)
-      } else {
-        failedBlocks.push(botId)
-      }
-
-      await sleep(timeout)
-    } catch (error) {
-      console.error(`Error blocking bot ${botId}. Error:`, error)
+    if (isBlocked) {
+      succeededBlocks.push(botId)
+    } else {
+      failedBlocks.push(botId)
     }
+
+    await sleep(timeout)
   }
 
   res.send({ succeededBlocks, failedBlocks })

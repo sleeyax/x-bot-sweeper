@@ -121,20 +121,24 @@ function IndexPopup() {
     setSelectedRows(newSelectedRowKeys)
   }
 
-  const findRecentBots = async () => {
+  const findBots = async () => {
     setStatus({
       message: "Scanning your followers. This may take a while...",
       type: "info"
     })
-    const res = await sendToBackground<FindBotsRequest>({
-      name: "find-bots",
-      body: {
-        rules: { bannedKeywords: [], followingToFollowersRatio: 100 },
-        filter
-      }
-    })
-    setBots(res.bots)
-    setStatus({ message: `Found ${res.bots.length} bot(s)`, type: "success" })
+    try {
+      const res = await sendToBackground<FindBotsRequest>({
+        name: "find-bots",
+        body: {
+          rules: { bannedKeywords: [], followingToFollowersRatio: 100 },
+          filter
+        }
+      })
+      setBots(res.bots)
+      setStatus({ message: `Found ${res.bots.length} bot(s)`, type: "success" })
+    } catch (error) {
+      setStatus({ message: error.message ?? "Unknown error.", type: "error" })
+    }
   }
 
   const blockBots = async () => {
@@ -142,34 +146,40 @@ function IndexPopup() {
       message: "Blocking bots. This may take a while...",
       type: "info"
     })
-    const { failedBlocks, succeededBlocks } = await sendToBackground<
-      BlockBotsRequest,
-      BlockBotsResponse
-    >({
-      name: "block-bots",
-      body: { botIds: selectedRows, timeout: 2500 }
-    })
-    setBots((state) => state.filter((bot) => !succeededBlocks.includes(bot.id)))
-    setSelectedRows((state) =>
-      state.filter((botId) => !succeededBlocks.includes(botId))
-    )
-    if (succeededBlocks.length > 0 && failedBlocks.length > 0) {
-      setStatus({
-        message: `Blocked ${succeededBlocks.length} bot(s) and failed to block ${failedBlocks.length} bot(s)`,
-        type: "warning"
+    try {
+      const { failedBlocks, succeededBlocks } = await sendToBackground<
+        BlockBotsRequest,
+        BlockBotsResponse
+      >({
+        name: "block-bots",
+        body: { botIds: selectedRows, timeout: 2500 }
       })
-    } else if (succeededBlocks.length > 0) {
-      setStatus({
-        message: `Blocked ${succeededBlocks.length} bot(s)`,
-        type: "success"
-      })
-    } else if (failedBlocks.length > 0) {
-      setStatus({
-        message: `Failed to block ${failedBlocks.length} bot(s)`,
-        type: "error"
-      })
-    } else {
-      setStatus({ message: "No bots were blocked", type: "error" })
+      setBots((state) =>
+        state.filter((bot) => !succeededBlocks.includes(bot.id))
+      )
+      setSelectedRows((state) =>
+        state.filter((botId) => !succeededBlocks.includes(botId))
+      )
+      if (succeededBlocks.length > 0 && failedBlocks.length > 0) {
+        setStatus({
+          message: `Blocked ${succeededBlocks.length} bot(s) and failed to block ${failedBlocks.length} bot(s)`,
+          type: "warning"
+        })
+      } else if (succeededBlocks.length > 0) {
+        setStatus({
+          message: `Blocked ${succeededBlocks.length} bot(s)`,
+          type: "success"
+        })
+      } else if (failedBlocks.length > 0) {
+        setStatus({
+          message: `Failed to block ${failedBlocks.length} bot(s)`,
+          type: "error"
+        })
+      } else {
+        setStatus({ message: "No bots were blocked", type: "error" })
+      }
+    } catch (error) {
+      setStatus({ message: error.message ?? "Unknown error.", type: "error" })
     }
   }
 
@@ -217,7 +227,7 @@ function IndexPopup() {
             ]}
             style={{ width: 150 }}
           />
-          <Button type="primary" onClick={findRecentBots}>
+          <Button type="primary" onClick={findBots}>
             Scan
           </Button>
         </Flex>

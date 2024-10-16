@@ -23,7 +23,6 @@ chrome.webRequest.onSendHeaders.addListener(
         ...requestHeaders,
         cookie: await getCookies(rootDomain)
       }
-      console.log("intercepted headers", headers)
       // Store the result in storage for later use.
       await storage.set(storageKeys.headers, JSON.stringify(headers))
     }

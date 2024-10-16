@@ -2,7 +2,7 @@ import type { PlasmoMessaging } from "@plasmohq/messaging"
 import { Storage } from "@plasmohq/storage"
 
 import { getFollowers } from "~api"
-import { getCookie, toJson } from "~background/utils"
+import { getCookie } from "~background/utils"
 import {
   rootDomain,
   storageKeys,
@@ -10,7 +10,7 @@ import {
   type FollowersFilter,
   type Rules
 } from "~shared"
-import { sleep } from "~utils"
+import { sleep, toJson } from "~utils"
 
 export type FindBotsRequest = { rules: Rules; filter: FollowersFilter }
 export type FindBotsResponse = { bots: Bot[] }

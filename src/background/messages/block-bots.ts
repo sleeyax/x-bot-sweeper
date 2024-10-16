@@ -2,9 +2,8 @@ import type { PlasmoMessaging } from "@plasmohq/messaging"
 import { Storage } from "@plasmohq/storage"
 
 import { blockUser } from "~api"
-import { toJson } from "~background/utils"
 import { storageKeys } from "~shared"
-import { sleep } from "~utils"
+import { sleep, toJson } from "~utils"
 
 export type BlockBotsRequest = { botIds: string[]; timeout?: number }
 export type BlockBotsResponse = {

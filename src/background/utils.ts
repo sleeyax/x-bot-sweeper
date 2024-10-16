@@ -25,6 +25,3 @@ export async function getCookie(domain: string, name: string): Promise<string> {
     })
   })
 }
-
-export const toJson = (data: string) =>
-  (data ?? "").trim() !== "" ? JSON.parse(data) : null

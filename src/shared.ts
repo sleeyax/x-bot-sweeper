@@ -8,7 +8,13 @@ export const domains = [
 export const rootDomain = "x.com"
 
 export const storageKeys = {
-  headers: "headers"
+  headers: "headers",
+  rules: "rules"
+}
+
+export const defaultRules: Rules = {
+  followingToFollowersRatio: 100,
+  bannedKeywords: []
 }
 
 export type Rules = {

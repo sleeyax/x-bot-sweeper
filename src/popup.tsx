@@ -22,7 +22,14 @@ import type {
   BlockBotsResponse
 } from "~background/messages/block-bots"
 import type { FindBotsRequest } from "~background/messages/find-bots"
-import { rootDomain, type Bot, type FollowersFilter, type Rules } from "~shared"
+import {
+  defaultRules,
+  rootDomain,
+  storageKeys,
+  type Bot,
+  type FollowersFilter,
+  type Rules
+} from "~shared"
 import { ThemeProvider } from "~theme"
 import { toFullSizeImage } from "~utils"
 
@@ -111,6 +118,7 @@ function IndexPopup() {
     "checkedBotIds",
     []
   )
+  const [rules] = useStorage<Rules>(storageKeys.rules, defaultRules)
   const [filter, setFilter] = useState<FollowersFilter>("recent")
   const [status, setStatus] = useState<{
     message: string
@@ -130,7 +138,7 @@ function IndexPopup() {
       const res = await sendToBackground<FindBotsRequest>({
         name: "find-bots",
         body: {
-          rules: { bannedKeywords: [], followingToFollowersRatio: 100 },
+          rules,
           filter
         }
       })

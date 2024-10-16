@@ -42,7 +42,7 @@ const handler: PlasmoMessaging.MessageHandler<
     for (const user of res.users) {
       // check follower to follow ratio
       const followingToFollowersRatio =
-        user.followingCount / user.followersCount
+        user.followingCount / Math.max(1, user.followersCount)
       if (followingToFollowersRatio >= rules.followingToFollowersRatio) {
         bots.push({
           ...user,

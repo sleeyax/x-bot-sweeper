@@ -105,7 +105,6 @@ function OptionsIndex() {
           stringMode
           required
           style={{ width: 200 }}
-          id="ratio"
         />
       </Form.Item>
 

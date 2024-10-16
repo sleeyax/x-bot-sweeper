@@ -1,5 +1,6 @@
 // TODO: Proper tree-shaking is broken at the moment. See: https://github.com/PlasmoHQ/plasmo/issues/997.
 // import {} from "antd"
+import Alert, { type AlertProps } from "antd/es/alert"
 import Button from "antd/es/button"
 import Flex from "antd/es/flex"
 import Image from "antd/es/image"
@@ -111,12 +112,20 @@ function IndexPopup() {
     []
   )
   const [filter, setFilter] = useState<FollowersFilter>("recent")
+  const [status, setStatus] = useState<{
+    message: string
+    type: AlertProps["type"]
+  }>()
 
   const onSelectChange = (newSelectedRowKeys: string[]) => {
     setSelectedRows(newSelectedRowKeys)
   }
 
   const findRecentBots = async () => {
+    setStatus({
+      message: "Scanning your followers. This may take a while...",
+      type: "info"
+    })
     const res = await sendToBackground<FindBotsRequest>({
       name: "find-bots",
       body: {
@@ -125,9 +134,14 @@ function IndexPopup() {
       }
     })
     setBots(res.bots)
+    setStatus({ message: `Found ${res.bots.length} bot(s)`, type: "success" })
   }
 
   const blockBots = async () => {
+    setStatus({
+      message: "Blocking bots. This may take a while...",
+      type: "info"
+    })
     const { failedBlocks, succeededBlocks } = await sendToBackground<
       BlockBotsRequest,
       BlockBotsResponse
@@ -135,12 +149,28 @@ function IndexPopup() {
       name: "block-bots",
       body: { botIds: selectedRows, timeout: 2500 }
     })
-    console.log("failedBlocks", failedBlocks)
-    console.log("succeededBlocks", succeededBlocks)
     setBots((state) => state.filter((bot) => !succeededBlocks.includes(bot.id)))
     setSelectedRows((state) =>
       state.filter((botId) => !succeededBlocks.includes(botId))
     )
+    if (succeededBlocks.length > 0 && failedBlocks.length > 0) {
+      setStatus({
+        message: `Blocked ${succeededBlocks.length} bot(s) and failed to block ${failedBlocks.length} bot(s)`,
+        type: "warning"
+      })
+    } else if (succeededBlocks.length > 0) {
+      setStatus({
+        message: `Blocked ${succeededBlocks.length} bot(s)`,
+        type: "success"
+      })
+    } else if (failedBlocks.length > 0) {
+      setStatus({
+        message: `Failed to block ${failedBlocks.length} bot(s)`,
+        type: "error"
+      })
+    } else {
+      setStatus({ message: "No bots were blocked", type: "error" })
+    }
   }
 
   const rowSelection: TableRowSelection<DataType> = {
@@ -150,7 +180,7 @@ function IndexPopup() {
 
   return (
     <ThemeProvider>
-      <Flex align="center" vertical>
+      <Flex align="center" vertical style={{ marginBottom: 10, marginTop: 10 }}>
         <Flex align="center" justify="center" gap={4}>
           <img src={sweeperImage} width={40} height={40} alt="Sweeper image" />
           <Title level={1} style={{ margin: 0, padding: 0 }}>
@@ -165,6 +195,9 @@ function IndexPopup() {
           </Link>
         </strong>
       </Flex>
+      {status?.message && (
+        <Alert type={status.type} message={status.message} showIcon closable />
+      )}
       <Flex gap={4} style={{ marginTop: 10, marginBottom: 10 }}>
         {selectedRows.length > 0 && (
           <Button type="primary" danger onClick={blockBots}>

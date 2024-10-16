@@ -10,6 +10,7 @@ import Tooltip from "antd/es/tooltip"
 import Typography from "antd/es/typography"
 import sweeperImage from "data-base64:~../assets/sweeper.png"
 import xLogo from "data-base64:~../assets/x-logo.png"
+import { useState } from "react"
 
 import { sendToBackground } from "@plasmohq/messaging"
 import { Storage } from "@plasmohq/storage"
@@ -19,7 +20,8 @@ import type {
   BlockBotsRequest,
   BlockBotsResponse
 } from "~background/messages/block-bots"
-import { rootDomain, type Bot, type Rules } from "~shared"
+import type { FindBotsRequest } from "~background/messages/find-bots"
+import { rootDomain, type Bot, type FollowersFilter, type Rules } from "~shared"
 import { ThemeProvider } from "~theme"
 import { toFullSizeImage } from "~utils"
 
@@ -108,15 +110,19 @@ function IndexPopup() {
     "checkedBotIds",
     []
   )
+  const [filter, setFilter] = useState<FollowersFilter>("recent")
 
   const onSelectChange = (newSelectedRowKeys: string[]) => {
     setSelectedRows(newSelectedRowKeys)
   }
 
   const findRecentBots = async () => {
-    const res = await sendToBackground<Rules>({
+    const res = await sendToBackground<FindBotsRequest>({
       name: "find-bots",
-      body: { bannedKeywords: [], followingToFollowersRatio: 100 }
+      body: {
+        rules: { bannedKeywords: [], followingToFollowersRatio: 100 },
+        filter
+      }
     })
     setBots(res.bots)
   }
@@ -167,10 +173,14 @@ function IndexPopup() {
         )}
         <Flex style={{ marginLeft: "auto" }} gap={4}>
           <Select
-            defaultValue="recent"
+            value={filter}
+            onChange={setFilter}
             options={[
-              { value: "recent", label: "Recent followers" },
-              { value: "all", label: "All followers" }
+              {
+                value: "recent" satisfies FollowersFilter,
+                label: "Recent followers"
+              },
+              { value: "all" satisfies FollowersFilter, label: "All followers" }
             ]}
             style={{ width: 150 }}
           />

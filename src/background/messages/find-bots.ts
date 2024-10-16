@@ -3,30 +3,62 @@ import { Storage } from "@plasmohq/storage"
 
 import { getFollowers } from "~api"
 import { getCookie, toJson } from "~background/utils"
-import { rootDomain, storageKeys, type Bot, type Rules } from "~shared"
+import {
+  rootDomain,
+  storageKeys,
+  type Bot,
+  type FollowersFilter,
+  type Rules
+} from "~shared"
+import { sleep } from "~utils"
 
-const handler: PlasmoMessaging.MessageHandler<Rules> = async (req, res) => {
-  const rules = req.body
+export type FindBotsRequest = { rules: Rules; filter: FollowersFilter }
+export type FindBotsResponse = { bots: Bot[] }
+
+const handler: PlasmoMessaging.MessageHandler<
+  FindBotsRequest,
+  FindBotsResponse
+> = async ({ body: { filter, rules } }, res) => {
   const storage = new Storage({ area: "local" })
   const headers = await storage.get(storageKeys.headers).then(toJson)
   const userId = await getUserId()
 
-  // TODO: implement pagination
-  const { cursor, users } = await getFollowers(userId, headers)
-
+  let cursor: string | undefined
   const bots: Bot[] = []
-  for (const user of users) {
-    // check follower to follow ratio
-    const followingToFollowersRatio = user.followingCount / user.followersCount
-    if (followingToFollowersRatio >= rules.followingToFollowersRatio) {
-      bots.push({ ...user, matchedRule: "followingToFollowersRatio", ratio: followingToFollowersRatio })
-      continue
+
+  while (true) {
+    const res = await getFollowers(userId, headers, cursor)
+
+    for (const user of res.users) {
+      // check follower to follow ratio
+      const followingToFollowersRatio =
+        user.followingCount / user.followersCount
+      if (followingToFollowersRatio >= rules.followingToFollowersRatio) {
+        bots.push({
+          ...user,
+          matchedRule: "followingToFollowersRatio",
+          ratio: followingToFollowersRatio
+        })
+        continue
+      }
+
+      // check bio for banned keywords
+      if (rules.bannedKeywords.some((keyword) => user.bio.includes(keyword))) {
+        bots.push({
+          ...user,
+          matchedRule: "bannedKeywords",
+          ratio: followingToFollowersRatio
+        })
+        continue
+      }
     }
 
-    // check bio for banned keywords
-    if (rules.bannedKeywords.some((keyword) => user.bio.includes(keyword))) {
-      bots.push({ ...user, matchedRule: "bannedKeywords", ratio: followingToFollowersRatio })
-      continue
+    cursor = res.cursor
+
+    if (filter === "all" && cursor != null) {
+      await sleep(1000)
+    } else {
+      break
     }
   }
 

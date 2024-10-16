@@ -47,9 +47,9 @@ export type Bot = User & {
   ratio: number
 }
 
-export type Cursor = string | undefined
-
 export type Followers = {
   users: User[]
-  cursor: Cursor
+  cursor?: string
 }
+
+export type FollowersFilter = "all" | "recent"

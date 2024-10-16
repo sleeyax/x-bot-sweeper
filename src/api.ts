@@ -1,4 +1,4 @@
-import type { Cursor, Followers, Headers, User } from "~shared"
+import type { Followers, Headers, User } from "~shared"
 
 export async function blockUser(userId: string, headers: Headers) {
   const res = await fetch("https://x.com/i/api/1.1/blocks/create.json", {
@@ -72,7 +72,7 @@ export async function getFollowers(
   )
 
   const users: User[] = []
-  let nextCursor: Cursor = undefined
+  let nextCursor: string
 
   for (const entry of instruction.entries) {
     if (entry.content?.itemContent?.itemType === "TimelineUser") {

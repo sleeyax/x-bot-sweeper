@@ -9,7 +9,9 @@ export const rootDomain = "x.com"
 
 export const storageKeys = {
   headers: "headers",
-  rules: "rules"
+  rules: "rules",
+  bots: "bots",
+  checkedBotIds: "checkedBotIds",
 }
 
 export const defaultRules: Rules = {

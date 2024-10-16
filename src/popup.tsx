@@ -107,7 +107,7 @@ const columns: TableColumnsType<DataType> = [
 function IndexPopup() {
   const [bots, setBots] = useStorage<Bot[]>(
     {
-      key: "bots",
+      key: storageKeys.bots,
       instance: new Storage({
         area: "local"
       })
@@ -115,7 +115,12 @@ function IndexPopup() {
     []
   )
   const [selectedRows, setSelectedRows] = useStorage<string[]>(
-    "checkedBotIds",
+    {
+      key: storageKeys.checkedBotIds,
+      instance: new Storage({
+        area: "local"
+      })
+    },
     []
   )
   const [rules] = useStorage<Rules>(storageKeys.rules, defaultRules)

@@ -217,7 +217,7 @@ function IndexPopup() {
 
   return (
     <ThemeProvider>
-      <Flex align="center" vertical style={{ marginBottom: 10, marginTop: 10 }}>
+      <Flex align="center" vertical style={{ marginBottom: 10, marginTop: 10, minWidth: 742 }}>
         <Flex align="center" justify="center" gap={4}>
           <img src={sweeperImage} width={40} height={40} alt="Sweeper image" />
           <Title level={1} style={{ margin: 0, padding: 0 }}>

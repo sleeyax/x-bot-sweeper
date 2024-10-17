@@ -11,7 +11,7 @@ import Tooltip from "antd/es/tooltip"
 import Typography from "antd/es/typography"
 import sweeperImage from "data-base64:~../assets/sweeper.png"
 import xLogo from "data-base64:~../assets/x-logo.png"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 
 import { sendToBackground } from "@plasmohq/messaging"
 import { Storage } from "@plasmohq/storage"
@@ -123,7 +123,13 @@ function IndexPopup() {
     },
     []
   )
-  const [rules] = useStorage<Rules>(storageKeys.rules, defaultRules)
+  const [rulesAsJson] = useStorage<string>(
+    storageKeys.rules,
+    (value) => {
+      return value ?? JSON.stringify(defaultRules)
+    }
+  )
+  const rules = useMemo<Rules>(() => JSON.parse(rulesAsJson), [rulesAsJson])
   const [filter, setFilter] = useState<FollowersFilter>("recent")
   const [status, setStatus] = useState<{
     message: string

@@ -1,7 +1,19 @@
 # x-bot-sweeper
-Browser extension to automatically remove bot accounts from your followers on Twitter / X.
+Browser extension to semi-automatically block fake followers and bots on X (formerly Twitter).
 
 This is a [Plasmo extension](https://docs.plasmo.com/) project bootstrapped with [`plasmo init`](https://www.npmjs.com/package/plasmo).
+
+![screenshot](./assets/screenshot.png)
+
+## FAQ
+
+**Can I get in trouble using this extension?**
+
+No, this extension is designed to help you block fake followers and bots on X. At the time of writing, it does not violate X's TOS. However, it is important to note that the extension is not perfect and may block real users by mistake. Misconfiguration of the timeout settings may also result in temporary rate limits imposed on your account. Use this extension at your own discretion.
+
+**Do you support X browser?**
+
+Currently, only Chromium-based browsers (i.e. Chrome, Edge, Brave etc.) are supported. However, we are working on adding support for other browsers in the future. See the [project issues](https://github.com/sleeyax/x-bot-sweeper/issues?q=sort%3Aupdated-desc+is%3Aissue+is%3Aopen) tab to keep track of progress.
 
 ## Development
 

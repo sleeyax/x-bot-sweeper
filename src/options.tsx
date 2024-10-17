@@ -179,7 +179,10 @@ function OptionsIndex() {
         <Input placeholder="OnlyFans, crypto, NFT" style={{ width: 400 }} />
       </Form.Item>
 
-      <Title level={3}>Timeouts</Title>
+      <Title level={3}>Timeouts (advanced)</Title>
+      <p>
+        Configure the timeouts between HTTP requests. Decreasing these below the recommended defaults may result in rate limiting issues.
+      </p>
       <Form.Item<FieldType>
         label="Block Timeout"
         name="blockTimeout"
@@ -198,7 +201,7 @@ function OptionsIndex() {
         label="My followers list timeout"
         name="myFollowersListTimeout"
         rules={[{ required: true, message: "Please enter a valid timeout" }]}
-        tooltip="The time in milliseconds to wait between each 'scroll' to retrieve your complete followers list."
+        tooltip="The time in milliseconds to wait before fetching the next batch of followers in your followers list. Think of it as the time it takes to 'scroll' to the bottom of the page."
         required>
         <InputNumber<number>
           placeholder={defaultSettings.timeouts.myFollowersListTimeout.toString()}

@@ -21,7 +21,10 @@ import type {
   BlockBotsRequest,
   BlockBotsResponse
 } from "~background/messages/block-bots"
-import type { FindBotsRequest } from "~background/messages/find-bots"
+import type {
+  FindBotsRequest,
+  FindBotsResponse
+} from "~background/messages/find-bots"
 import {
   defaultSettings,
   rootDomain,
@@ -147,7 +150,7 @@ function IndexPopup() {
       type: "info"
     })
     try {
-      const res = await sendToBackground<FindBotsRequest>({
+      const res = await sendToBackground<FindBotsRequest, FindBotsResponse>({
         name: "find-bots",
         body: {
           rules: settings.rules,
@@ -155,6 +158,9 @@ function IndexPopup() {
           timeout: settings.timeouts.myFollowersListTimeout
         }
       })
+      if (res.isError) {
+        throw new Error(res.error)
+      }
       setBots(res.bots)
       setStatus({ message: `Found ${res.bots.length} bot(s)`, type: "success" })
     } catch (error) {
@@ -168,32 +174,32 @@ function IndexPopup() {
       type: "info"
     })
     try {
-      const { failedBlocks, succeededBlocks } = await sendToBackground<
-        BlockBotsRequest,
-        BlockBotsResponse
-      >({
+      const res = await sendToBackground<BlockBotsRequest, BlockBotsResponse>({
         name: "block-bots",
         body: { botIds: selectedRows, timeout: settings.timeouts.blockTimeout }
       })
+      if (res.isError) {
+        throw new Error(res.error)
+      }
       setBots((state) =>
-        state.filter((bot) => !succeededBlocks.includes(bot.id))
+        state.filter((bot) => !res.succeededBlocks.includes(bot.id))
       )
       setSelectedRows((state) =>
-        state.filter((botId) => !succeededBlocks.includes(botId))
+        state.filter((botId) => !res.succeededBlocks.includes(botId))
       )
-      if (succeededBlocks.length > 0 && failedBlocks.length > 0) {
+      if (res.succeededBlocks.length > 0 && res.failedBlocks.length > 0) {
         setStatus({
-          message: `Blocked ${succeededBlocks.length} bot(s) and failed to block ${failedBlocks.length} bot(s)`,
+          message: `Blocked ${res.succeededBlocks.length} bot(s) and failed to block ${res.failedBlocks.length} bot(s)`,
           type: "warning"
         })
-      } else if (succeededBlocks.length > 0) {
+      } else if (res.succeededBlocks.length > 0) {
         setStatus({
-          message: `Blocked ${succeededBlocks.length} bot(s)`,
+          message: `Blocked ${res.succeededBlocks.length} bot(s)`,
           type: "success"
         })
-      } else if (failedBlocks.length > 0) {
+      } else if (res.failedBlocks.length > 0) {
         setStatus({
-          message: `Failed to block ${failedBlocks.length} bot(s)`,
+          message: `Failed to block ${res.failedBlocks.length} bot(s)`,
           type: "error"
         })
       } else {

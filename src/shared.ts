@@ -89,3 +89,6 @@ export type Followers = {
 }
 
 export type FollowersFilter = "all" | "recent"
+
+export type MessageRequest<T> = T
+export type MessageResponse<T> = T & { error?: string; isError: boolean }

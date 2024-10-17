@@ -85,6 +85,9 @@ function OptionsIndex() {
 
   const reset = () => {
     setSettings(defaultSettings)
+    syncInputFields(defaultSettings)
+    setMinFollowers(undefined)
+    setMinFollowing(undefined)
     setIsSaved(true)
   }
 

@@ -36,6 +36,8 @@ function OptionsIndex() {
   const [isSaved, setIsSaved] = useState(false)
   const [form] = Form.useForm()
   const ratio = Form.useWatch("ratio", form)
+  const [minFollowing, setMinFollowing] = useState<string>()
+  const [minFollowers, setMinFollowers] = useState<string>()
 
   const syncInputFields = (rules: Rules) => {
     form.setFieldsValue(toFieldType(rules))
@@ -95,8 +97,8 @@ function OptionsIndex() {
         label="Ratio"
         name="ratio"
         rules={[{ required: true, message: "Please enter a ratio" }]}
-        tooltip="The following to followers ratio (calculated as following /
-          followers)."
+        tooltip="The following to followers ratio is calculated as following /
+          followers. You can use the calculator below."
         required>
         <InputNumber<string>
           placeholder={defaultRules.followingToFollowersRatio.toString()}
@@ -116,6 +118,38 @@ function OptionsIndex() {
           closable
         />
       )}
+
+      <p>Calculate Ratio</p>
+      <Flex gap={4}>
+        <InputNumber<string>
+          placeholder="Amount Following"
+          min="0"
+          step={1}
+          stringMode
+          style={{ width: 200 }}
+          value={minFollowing}
+          onChange={setMinFollowing}
+        />
+        <InputNumber<string>
+          placeholder="Amount Followers"
+          min="1"
+          step={1}
+          stringMode
+          style={{ width: 200 }}
+          value={minFollowers}
+          onChange={setMinFollowers}
+        />
+        <Button
+          onClick={() => {
+            const ratio = parseFloat(minFollowing) / parseFloat(minFollowers)
+            if (Number.isNaN(ratio) || !isFinite(ratio)) {
+              return
+            }
+            form.setFieldsValue({ ratio: ratio.toString() })
+          }}>
+          Calculate
+        </Button>
+      </Flex>
 
       <Title level={3}>Banned keywords</Title>
       <Form.Item<FieldType>

@@ -94,7 +94,9 @@ export async function getFollowers(
       entry.content.entryType === "TimelineTimelineCursor" &&
       entry.content.cursorType.toLowerCase() === "bottom"
     ) {
-      nextCursor = entry.content.value
+      const value: string = entry.content.value
+      // If the cursor value starts with "0|" it means we've reached the end of the list.
+      nextCursor = value.startsWith("0|") ? undefined : value
     }
   }
 

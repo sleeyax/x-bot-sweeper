@@ -2,7 +2,7 @@
   "name": "x-bot-sweeper",
   "displayName": "X bot sweeper",
   "version": "0.0.1",
-  "description": "Remove bot accounts from your followers on Twitter/X",
+  "description": "Block fake followers and bots on X (formerly Twitter)",
   "author": "Sleeyax",
   "scripts": {
     "dev": "plasmo dev",

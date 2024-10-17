@@ -9,14 +9,20 @@ export const rootDomain = "x.com"
 
 export const storageKeys = {
   headers: "headers",
-  rules: "rules",
+  settings: "settings",
   bots: "bots",
-  checkedBotIds: "checkedBotIds",
+  checkedBotIds: "checkedBotIds"
 }
 
-export const defaultRules: Rules = {
-  followingToFollowersRatio: 100,
-  bannedKeywords: []
+export const defaultSettings: Settings = {
+  rules: {
+    followingToFollowersRatio: 100,
+    bannedKeywords: []
+  },
+  timeouts: {
+    blockTimeout: 2500,
+    myFollowersListTimeout: 1000
+  }
 }
 
 export type Rules = {
@@ -34,6 +40,28 @@ export type Rules = {
 }
 
 export type MatchedRule = keyof Rules
+
+export type Settings = {
+  /**
+   * The rules to apply when checking for bots.
+   */
+  rules: Rules
+
+  /**
+   * The timeouts to apply when fetching data.
+   */
+  timeouts: {
+    /**
+     * The time in milliseconds to wait between each block request.
+     */
+    blockTimeout: number
+
+    /**
+     * The time in milliseconds to wait between each request in order to fetch the whole user followers list.
+     */
+    myFollowersListTimeout: number
+  }
+}
 
 export type Headers = Record<string, string>
 

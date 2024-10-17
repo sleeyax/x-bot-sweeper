@@ -12,13 +12,17 @@ import {
 } from "~shared"
 import { sleep, toJson } from "~utils"
 
-export type FindBotsRequest = { rules: Rules; filter: FollowersFilter }
+export type FindBotsRequest = {
+  rules: Rules
+  filter: FollowersFilter
+  timeout: number
+}
 export type FindBotsResponse = { bots: Bot[] }
 
 const handler: PlasmoMessaging.MessageHandler<
   FindBotsRequest,
   FindBotsResponse
-> = async ({ body: { filter, rules } }, res) => {
+> = async ({ body: { filter, rules, timeout } }, res) => {
   const storage = new Storage({ area: "local" })
   const headers = await storage.get(storageKeys.headers).then(toJson)
   if (!headers) {
@@ -66,7 +70,7 @@ const handler: PlasmoMessaging.MessageHandler<
     cursor = res.cursor
 
     if (filter === "all" && cursor != null) {
-      await sleep(1000)
+      await sleep(timeout)
     } else {
       break
     }

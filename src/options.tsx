@@ -10,80 +10,97 @@ import { useEffect, useMemo, useState } from "react"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
-import { defaultRules, storageKeys, type Rules } from "~shared"
+import {
+  defaultSettings,
+  storageKeys,
+  type Rules,
+  type Settings
+} from "~shared"
 
 type FieldType = {
   ratio: string
   bannedKeywords?: string
+  blockTimeout: number
+  myFollowersListTimeout: number
 }
 
-function toFieldType(rules: Rules): FieldType {
+function toFieldType({ rules, timeouts }: Settings): FieldType {
   return {
     ratio: rules.followingToFollowersRatio.toString(),
-    bannedKeywords: rules.bannedKeywords.join(", ")
+    bannedKeywords: rules.bannedKeywords.join(", "),
+    blockTimeout: timeouts.blockTimeout,
+    myFollowersListTimeout: timeouts.myFollowersListTimeout
   }
 }
 
 function OptionsIndex() {
-  const [rulesAsJson, setRulesAsJson] = useStorage<string>(
-    storageKeys.rules,
-    (value) => {
-      return value ?? JSON.stringify(defaultRules)
-    }
+  const [settingsAsJson, setSettingsAsJson] = useStorage<string>(
+    storageKeys.settings,
+    (value) => value ?? JSON.stringify(defaultSettings)
   )
-  const rules = useMemo<Rules>(() => JSON.parse(rulesAsJson), [rulesAsJson])
-  const setRules = (rules: Rules) => setRulesAsJson(JSON.stringify(rules))
+  const settings = useMemo<Settings>(
+    () => JSON.parse(settingsAsJson),
+    [settingsAsJson]
+  )
+  const setSettings = (settings: Settings) =>
+    setSettingsAsJson(JSON.stringify(settings))
   const [isSaved, setIsSaved] = useState(false)
   const [form] = Form.useForm()
   const ratio = Form.useWatch("ratio", form)
   const [minFollowing, setMinFollowing] = useState<string>()
   const [minFollowers, setMinFollowers] = useState<string>()
 
-  const syncInputFields = (rules: Rules) => {
-    form.setFieldsValue(toFieldType(rules))
+  const syncInputFields = (settings: Settings) => {
+    form.setFieldsValue(toFieldType(settings))
   }
 
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
     const newRatio = parseFloat(values.ratio)
     if (Number.isNaN(newRatio)) {
-      syncInputFields(rules)
+      syncInputFields(settings)
       return
     }
 
-    const newRules: Rules = {
-      followingToFollowersRatio: newRatio,
-      bannedKeywords: [
-        ...new Set(
-          (values.bannedKeywords ?? "")
-            .split(",")
-            .map((keyword) => keyword.trim())
-            .filter(Boolean)
-        )
-      ]
+    const newSettings: Settings = {
+      rules: {
+        followingToFollowersRatio: newRatio,
+        bannedKeywords: [
+          ...new Set(
+            (values.bannedKeywords ?? "")
+              .split(",")
+              .map((keyword) => keyword.trim())
+              .filter(Boolean)
+          )
+        ]
+      },
+      timeouts: {
+        blockTimeout: values.blockTimeout,
+        myFollowersListTimeout: values.myFollowersListTimeout
+      }
     }
-    setRules(newRules)
-    syncInputFields(newRules)
+    setSettings(newSettings)
+    syncInputFields(newSettings)
     setIsSaved(true)
   }
 
   const reset = () => {
-    setRules(defaultRules)
+    setSettings(defaultSettings)
     setIsSaved(true)
   }
 
   // For some reason the `useStorage` hook above doesn't catch up with the real state from storage properly.
   // So we apply this hack to ensure the state is correctly synced with what's stored in storage.
   useEffect(() => {
-    syncInputFields(rules)
-  }, [rulesAsJson])
+    syncInputFields(settings)
+  }, [settingsAsJson])
 
   return (
     <Form
       form={form}
-      name={storageKeys.rules}
+      name={storageKeys.settings}
       layout="vertical"
       autoComplete="off"
-      initialValues={toFieldType(rules)}
+      initialValues={toFieldType(settings)}
       onFinish={onFinish}
       style={{ padding: 10 }}>
       <Title level={1}>X Bot Sweeper Settings</Title>
@@ -101,7 +118,7 @@ function OptionsIndex() {
           followers. You can use the calculator below."
         required>
         <InputNumber<string>
-          placeholder={defaultRules.followingToFollowersRatio.toString()}
+          placeholder={defaultSettings.rules.followingToFollowersRatio.toString()}
           min="0"
           step={1}
           stringMode
@@ -157,6 +174,36 @@ function OptionsIndex() {
         name="bannedKeywords"
         tooltip="Separate keywords by a comma (,) and optionally followed by a space. Keywords are case sensitive.">
         <Input placeholder="OnlyFans, crypto, NFT" style={{ width: 400 }} />
+      </Form.Item>
+
+      <Title level={3}>Timeouts</Title>
+      <Form.Item<FieldType>
+        label="Block Timeout"
+        name="blockTimeout"
+        rules={[{ required: true, message: "Please enter a valid timeout" }]}
+        tooltip="The time in milliseconds to wait between each block request."
+        required>
+        <InputNumber<number>
+          placeholder={defaultSettings.timeouts.blockTimeout.toString()}
+          min={500}
+          step={500}
+          required
+          style={{ width: 200 }}
+        />
+      </Form.Item>
+      <Form.Item<FieldType>
+        label="My followers list timeout"
+        name="myFollowersListTimeout"
+        rules={[{ required: true, message: "Please enter a valid timeout" }]}
+        tooltip="The time in milliseconds to wait between each 'scroll' to retrieve your complete followers list."
+        required>
+        <InputNumber<number>
+          placeholder={defaultSettings.timeouts.myFollowersListTimeout.toString()}
+          min={500}
+          step={500}
+          required
+          style={{ width: 200 }}
+        />
       </Form.Item>
 
       <Divider />

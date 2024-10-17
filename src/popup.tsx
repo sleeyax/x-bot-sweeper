@@ -23,12 +23,12 @@ import type {
 } from "~background/messages/block-bots"
 import type { FindBotsRequest } from "~background/messages/find-bots"
 import {
-  defaultRules,
+  defaultSettings,
   rootDomain,
   storageKeys,
   type Bot,
   type FollowersFilter,
-  type Rules
+  type Settings
 } from "~shared"
 import { ThemeProvider } from "~theme"
 import { toFullSizeImage } from "~utils"
@@ -123,13 +123,14 @@ function IndexPopup() {
     },
     []
   )
-  const [rulesAsJson] = useStorage<string>(
-    storageKeys.rules,
-    (value) => {
-      return value ?? JSON.stringify(defaultRules)
-    }
+  const [settingsAsJson] = useStorage<string>(
+    storageKeys.settings,
+    (value) => value ?? JSON.stringify(defaultSettings)
   )
-  const rules = useMemo<Rules>(() => JSON.parse(rulesAsJson), [rulesAsJson])
+  const settings = useMemo<Settings>(
+    () => JSON.parse(settingsAsJson),
+    [settingsAsJson]
+  )
   const [filter, setFilter] = useState<FollowersFilter>("recent")
   const [status, setStatus] = useState<{
     message: string
@@ -149,8 +150,9 @@ function IndexPopup() {
       const res = await sendToBackground<FindBotsRequest>({
         name: "find-bots",
         body: {
-          rules,
-          filter
+          rules: settings.rules,
+          filter,
+          timeout: settings.timeouts.myFollowersListTimeout
         }
       })
       setBots(res.bots)
@@ -171,7 +173,7 @@ function IndexPopup() {
         BlockBotsResponse
       >({
         name: "block-bots",
-        body: { botIds: selectedRows, timeout: 2500 }
+        body: { botIds: selectedRows, timeout: settings.timeouts.blockTimeout }
       })
       setBots((state) =>
         state.filter((bot) => !succeededBlocks.includes(bot.id))

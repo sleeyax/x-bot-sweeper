@@ -140,7 +140,7 @@ function OptionsIndex() {
       )}
 
       <p>Calculate Ratio</p>
-      <Flex gap={4}>
+      <Flex gap={4} align="center">
         <InputNumber<string>
           placeholder="Amount Following"
           min="0"
@@ -150,6 +150,7 @@ function OptionsIndex() {
           value={minFollowing}
           onChange={setMinFollowing}
         />
+        <span> / </span>
         <InputNumber<string>
           placeholder="Amount Followers"
           min="1"

@@ -1,8 +1,6 @@
 # X Bot Sweeper
 Browser extension to semi-automatically identify and block fake followers or bots on X (formerly Twitter).
 
-This is a [Plasmo extension](https://docs.plasmo.com/) project bootstrapped with [`plasmo init`](https://www.npmjs.com/package/plasmo).
-
 ![screenshot](./assets/screenshot.png)
 
 ## Installation
@@ -28,6 +26,8 @@ No, this extension is designed to help you block fake followers and bots on X. A
 Currently, only Chromium-based browsers (i.e. Chrome, Edge, Brave etc.) are supported. However, we are working on adding support for other browsers in the future. See the [project issues](https://github.com/sleeyax/x-bot-sweeper/issues?q=sort%3Aupdated-desc+is%3Aissue+is%3Aopen) tab to keep track of progress.
 
 ## Development
+
+This is a [Plasmo extension](https://docs.plasmo.com/) project bootstrapped with [`plasmo init`](https://www.npmjs.com/package/plasmo).
 
 At the time of writing, Node.js v20 is **required** to run this project without [weird build issues](https://github.com/PlasmoHQ/plasmo/issues/1060). Please install [nvm](https://github.com/nvm-sh/nvm) to make managing Node versions easier and then run `nvm use` at the root of this project to switch to the supported version. We also strongly recommend you to use [pnpm](https://pnpm.io/) as your package manager, as it is the one we use to develop and test this project and npm has caused issues with Plasmo in the past.
 

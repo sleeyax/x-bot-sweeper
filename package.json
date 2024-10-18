@@ -2,7 +2,7 @@
   "name": "x-bot-sweeper",
   "displayName": "X bot sweeper",
   "version": "0.0.1",
-  "description": "Block fake followers and bots on X (formerly Twitter)",
+  "description": "Block fake followers and bots on X (formerly Twitter). Free and open source.",
   "author": "Sleeyax",
   "scripts": {
     "dev": "plasmo dev",

@@ -5,6 +5,18 @@ This is a [Plasmo extension](https://docs.plasmo.com/) project bootstrapped with
 
 ![screenshot](./assets/screenshot.png)
 
+## Installation
+
+The extension has been published to the Chrome Web store but is still **pending review**. While you wait, you can install it manually by following these steps:
+
+1. Download the [latest release](https://github.com/sleeyax/x-bot-sweeper/releases) for your preferred browser.
+2. Unzip the downloaded file.
+3. Open your browser and navigate to `chrome://extensions`.
+4. Enable the "Developer mode" toggle in the top right corner.
+5. Click the "Load unpacked" button and select the unzipped folder.
+
+The extension should now be installed and ready to use. Pin it to your browser toolbar for easy access.
+
 ## FAQ
 
 **Can I get in trouble for using this extension?**

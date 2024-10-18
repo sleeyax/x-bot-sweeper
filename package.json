@@ -28,7 +28,7 @@
   },
   "manifest": {
     "host_permissions": [
-      "https://*/*"
+      "https://x.com/*"
     ],
     "permissions": [
       "webRequest",

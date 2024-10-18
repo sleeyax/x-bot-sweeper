@@ -1,9 +1,4 @@
-export const domains = [
-  "https://x.com/*",
-  "https://twitter.com/*",
-  "https://mobile.twitter.com/*",
-  "https://mobile.x.com/*"
-]
+export const domains = ["https://x.com/*"]
 
 export const rootDomain = "x.com"
 

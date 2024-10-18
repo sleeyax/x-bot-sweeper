@@ -1,5 +1,5 @@
 # X Bot Sweeper
-Browser extension to semi-automatically block fake followers and bots on X (formerly Twitter).
+Browser extension to semi-automatically identify and block fake followers or bots on X (formerly Twitter).
 
 This is a [Plasmo extension](https://docs.plasmo.com/) project bootstrapped with [`plasmo init`](https://www.npmjs.com/package/plasmo).
 

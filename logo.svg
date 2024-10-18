@@ -10,6 +10,9 @@
    xml:space="preserve"
    inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
    sodipodi:docname="logo.svg"
+   inkscape:export-filename="assets/icon.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -23,9 +26,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
      inkscape:document-units="px"
-     inkscape:export-bgcolor="#1c9af0ff"
+     inkscape:export-bgcolor="#ffffff00"
      inkscape:zoom="1.4482422"
-     inkscape:cx="401.52124"
+     inkscape:cx="401.17599"
      inkscape:cy="102.5381"
      inkscape:window-width="3072"
      inkscape:window-height="1692"
@@ -39,7 +42,7 @@
      inkscape:label="Layer 3"
      style="fill:#1c9af0;fill-opacity:1;stroke:#000000;stroke-opacity:1"><g
        id="g2"
-       transform="matrix(20.962014,0,0,20.962014,4.455832,4.455832)"
+       transform="matrix(19.999717,0,0,19.99062,16,16)"
        style="fill:#1c9af0;fill-opacity:1;stroke:#000000;stroke-opacity:1"><g
          id="Guides"
          style="fill:#1c9af0;fill-opacity:1;stroke:#000000;stroke-opacity:1">
@@ -174,7 +177,7 @@
    style="fill:#1c9af0;fill-opacity:1;stroke:#000000;stroke-opacity:1">
 		<polygon
    style="fill:#1c9af0;fill-opacity:1;stroke:#000000;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1"
-   points="10.5,6.5 9,7.5 7.5,6.5 7.5,5 9,4 10.5,5 "
+   points="9,4 10.5,5 10.5,6.5 9,7.5 7.5,6.5 7.5,5 "
    id="polygon1" />
 		
 			<line
@@ -186,7 +189,7 @@
    id="line1" />
 		<polygon
    style="fill:#1c9af0;fill-opacity:1;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1"
-   points="16,23.5 8,23.5 6.5,16 9,13.5 15,13.5 17.5,16 "
+   points="15,13.5 17.5,16 16,23.5 8,23.5 6.5,16 9,13.5 "
    id="polygon2"
    inkscape:label="polygon2" />
 		
@@ -215,14 +218,14 @@
    id="polyline4" />
 		<polygon
    style="fill:#1c9af0;fill-opacity:1;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1"
-   points="16,10.5 20.5,6 16,1.5 8,1.5 3.5,6 8,10.5 "
+   points="3.5,6 8,10.5 16,10.5 20.5,6 16,1.5 8,1.5 "
    id="polygon4" />
 		<polygon
    style="fill:#1c9af0;fill-opacity:1;stroke:#000000;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1"
-   points="13.5,6.5 15,7.5 16.5,6.5 16.5,5 15,4 13.5,5 "
+   points="15,4 13.5,5 13.5,6.5 15,7.5 16.5,6.5 16.5,5 "
    id="polygon5" /><polygon
    style="fill:#1c9af0;fill-opacity:1;stroke:#000000;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1"
-   points="15,7.5 16.5,6.5 16.5,5 15,4 13.5,5 13.5,6.5 "
+   points="13.5,5 13.5,6.5 15,7.5 16.5,6.5 16.5,5 15,4 "
    id="polygon5-6"
    transform="translate(-6.4806777,-0.06763822)" />
 		<polyline
@@ -240,12 +243,13 @@
      inkscape:label="Layer 2"
      style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-opacity:1"><text
        xml:space="preserve"
-       style="font-size:691.251px;line-height:1.25;font-family:sans-serif;fill:#cb4e47;fill-opacity:1;stroke:none;stroke-width:1.296;stroke-dasharray:none;stroke-opacity:1"
-       x="53.463463"
-       y="502.77661"
-       id="text1"><tspan
+       style="font-size:659.368px;line-height:1.25;font-family:sans-serif;fill:#cb4e47;fill-opacity:1;stroke:none;stroke-width:1.23622;stroke-dasharray:none;stroke-opacity:1"
+       x="62.743542"
+       y="491.34003"
+       id="text1"
+       transform="scale(1.0002275,0.99977255)"><tspan
          sodipodi:role="line"
          id="tspan1"
-         x="53.463463"
-         y="502.77661"
-         style="font-size:691.251px;fill:#cb4e47;fill-opacity:1;stroke:none;stroke-width:1.296;stroke-dasharray:none;stroke-opacity:1">X</tspan></text></g></svg>
+         x="62.743542"
+         y="491.34003"
+         style="font-size:659.368px;fill:#cb4e47;fill-opacity:1;stroke:none;stroke-width:1.23622;stroke-dasharray:none;stroke-opacity:1">X</tspan></text></g></svg>

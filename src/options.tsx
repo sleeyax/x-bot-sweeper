@@ -105,7 +105,7 @@ function OptionsIndex() {
       autoComplete="off"
       initialValues={toFieldType(settings)}
       onFinish={onFinish}
-      style={{ padding: 10 }}>
+      style={{ padding: "0.625rem" }}>
       <Title level={1}>X Bot Sweeper Settings</Title>
       {isSaved && (
         <Alert message="Settings saved" type="success" showIcon closable />
@@ -126,7 +126,7 @@ function OptionsIndex() {
           step={1}
           stringMode
           required
-          style={{ width: 200 }}
+          style={{ width: "12.5rem" }}
         />
       </Form.Item>
 
@@ -146,7 +146,7 @@ function OptionsIndex() {
           min="0"
           step={1}
           stringMode
-          style={{ width: 200 }}
+          style={{ width: "12.5rem" }}
           value={minFollowing}
           onChange={setMinFollowing}
         />
@@ -156,7 +156,7 @@ function OptionsIndex() {
           min="1"
           step={1}
           stringMode
-          style={{ width: 200 }}
+          style={{ width: "12.5rem" }}
           value={minFollowers}
           onChange={setMinFollowers}
         />
@@ -177,7 +177,7 @@ function OptionsIndex() {
         label="Keywords in Bio"
         name="bannedKeywords"
         tooltip="Separate keywords by a comma (,) and optionally followed by a space. Keywords are case sensitive.">
-        <Input placeholder="OnlyFans, crypto, NFT" style={{ width: 400 }} />
+        <Input placeholder="OnlyFans, crypto, NFT" style={{ width: "25rem" }} />
       </Form.Item>
 
       <Title level={3}>Timeouts (advanced)</Title>
@@ -195,7 +195,7 @@ function OptionsIndex() {
           min={500}
           step={500}
           required
-          style={{ width: 200 }}
+          style={{ width: "12.5rem" }}
         />
       </Form.Item>
       <Form.Item<FieldType>
@@ -209,13 +209,13 @@ function OptionsIndex() {
           min={500}
           step={500}
           required
-          style={{ width: 200 }}
+          style={{ width: "12.5rem" }}
         />
       </Form.Item>
 
       <Divider />
 
-      <Flex style={{ marginTop: 10 }} gap={10}>
+      <Flex style={{ marginTop: "0.625rem" }} gap={10}>
         <Button htmlType="submit">Save</Button>
         <Button onClick={reset} danger>
           Reset to default

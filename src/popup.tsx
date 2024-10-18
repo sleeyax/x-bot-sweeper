@@ -64,7 +64,7 @@ const columns: TableColumnsType<DataType> = [
         <Link
           href={`https://${rootDomain}/${row.username}`}
           target="_blank"
-          style={{ fontSize: 11 }}>
+          style={{ fontSize: "0.6875rem" }}>
           @{row.username}
         </Link>
       </>
@@ -98,7 +98,7 @@ const columns: TableColumnsType<DataType> = [
     title: "Reason",
     dataIndex: "matchedRule",
     render: (rule) => (
-      <span style={{ fontSize: 11 }}>
+      <span style={{ fontSize: "0.6875rem" }}>
         {rule === "followingToFollowersRatio"
           ? "Suspicious ratio"
           : "Banned keywords"}
@@ -217,58 +217,60 @@ function IndexPopup() {
 
   return (
     <ThemeProvider>
-      <Flex align="center" vertical style={{ marginBottom: 10, marginTop: 10, minWidth: 742 }}>
-        <Flex align="center" justify="center" gap={4}>
-          <img src={sweeperImage} width={40} height={40} alt="Sweeper image" />
-          <Title level={1} style={{ margin: 0, padding: 0 }}>
-            Bot Sweeper for
-          </Title>
-          <img src={xLogo} width={30} height={30} alt="X logo image" />
+      <div style={{minWidth: "46.375rem"}}>
+        <Flex align="center" vertical style={{ marginBottom: "0.6875rem", marginTop: "0.6875rem" }}>
+          <Flex align="center" justify="center" gap={4}>
+            <img src={sweeperImage} width={40} height={40} alt="Sweeper image" />
+            <Title level={1} style={{ margin: "0rem", padding: "0rem" }}>
+              Bot Sweeper for
+            </Title>
+            <img src={xLogo} width={30} height={30} alt="X logo image" />
+          </Flex>
+          <strong>
+            developed by{" "}
+            <Link href={`https://${rootDomain}/sleeyax`} target="_blank">
+              @sleeyax
+            </Link>
+          </strong>
         </Flex>
-        <strong>
-          developed by{" "}
-          <Link href={`https://${rootDomain}/sleeyax`} target="_blank">
-            @sleeyax
-          </Link>
-        </strong>
-      </Flex>
-      {status?.message && (
-        <Alert type={status.type} message={status.message} showIcon closable />
-      )}
-      <Flex gap={4} style={{ marginTop: 10, marginBottom: 10 }}>
-        {selectedRows.length > 0 && (
-          <Button type="primary" danger onClick={blockBots}>
-            Block {selectedRows.length} bot(s)
-          </Button>
+        {status?.message && (
+          <Alert type={status.type} message={status.message} showIcon closable />
         )}
-        <Flex style={{ marginLeft: "auto" }} gap={4}>
-          <Select
-            value={filter}
-            onChange={setFilter}
-            options={[
-              {
-                value: "recent" satisfies FollowersFilter,
-                label: "Recent followers"
-              },
-              { value: "all" satisfies FollowersFilter, label: "All followers" }
-            ]}
-            style={{ width: 150 }}
-          />
-          <Button type="primary" onClick={findBots}>
-            Scan
-          </Button>
+        <Flex gap={4} style={{ marginTop: "0.625rem", marginBottom: "0.625rem" }}>
+          {selectedRows.length > 0 && (
+            <Button type="primary" danger onClick={blockBots}>
+              Block {selectedRows.length} bot(s)
+            </Button>
+          )}
+          <Flex style={{ marginLeft: "auto" }} gap={4}>
+            <Select
+              value={filter}
+              onChange={setFilter}
+              options={[
+                {
+                  value: "recent" satisfies FollowersFilter,
+                  label: "Recent followers"
+                },
+                { value: "all" satisfies FollowersFilter, label: "All followers" }
+              ]}
+              style={{ width: "9.375rem" }}
+            />
+            <Button type="primary" onClick={findBots}>
+              Scan
+            </Button>
+          </Flex>
         </Flex>
-      </Flex>
-      {bots.length > 0 && (
-        <Table
-          tableLayout="auto"
-          rowSelection={rowSelection}
-          columns={columns}
-          dataSource={bots}
-          rowKey={(record) => record.id}
-          pagination={{ pageSize: 100 }}
-        />
-      )}
+        {bots.length > 0 && (
+          <Table
+            tableLayout="auto"
+            rowSelection={rowSelection}
+            columns={columns}
+            dataSource={bots}
+            rowKey={(record) => record.id}
+            pagination={{ pageSize: 100 }}
+          />
+        )}
+      </div>
     </ThemeProvider>
   )
 }

@@ -15,6 +15,9 @@ The extension has been published to the Chrome Web store but is still **pending 
 
 The extension should now be installed and ready to use. Pin it to your browser toolbar for easy access.
 
+## Usage
+*Usage instructions will be added soon.*
+
 ## FAQ
 
 **Can I get in trouble for using this extension?**

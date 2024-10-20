@@ -4,8 +4,6 @@
 
 Browser extension to semi-automatically identify and block fake followers or bots on X (formerly Twitter).
 
-![screenshot](./assets/screenshot.png)
-
 ## Installation
 
 ### Chromium

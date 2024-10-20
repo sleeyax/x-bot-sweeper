@@ -1,11 +1,20 @@
 # X Bot Sweeper
+
+[![Available in the Chrome Web Store](https://storage.googleapis.com/web-dev-uploads/image/WlD8wC6g8khYWPJUsQceQkhXSlv1/UV4C4ybeBTsZt43U4xis.png)](https://chromewebstore.google.com/detail/x-bot-sweeper/fhhpkkpmedefldnkocodcmncpmocfbib)
+
 Browser extension to semi-automatically identify and block fake followers or bots on X (formerly Twitter).
 
 ![screenshot](./assets/screenshot.png)
 
 ## Installation
 
-The extension has been published to the Chrome Web store but is still **pending review**. While you wait, you can install it manually by following these steps:
+### Chromium
+Chrome, brave, edge and other chromium-based browsers can install the extension directly from the Chrome Web Store:
+
+[Link to Chrome Web Store page](https://chromewebstore.google.com/detail/x-bot-sweeper/fhhpkkpmedefldnkocodcmncpmocfbib)
+
+### Manual installation
+You may wish to install the extension manually if you want to use a specific version or if you are a developer. Follow these steps:
 
 1. Download the [latest release](https://github.com/sleeyax/x-bot-sweeper/releases) for your preferred browser.
 2. Unzip the downloaded file.
@@ -16,7 +25,17 @@ The extension has been published to the Chrome Web store but is still **pending 
 The extension should now be installed and ready to use. Pin it to your browser toolbar for easy access.
 
 ## Usage
-*Usage instructions will be added soon.*
+See [my article on dev.to](https://dev.to/sleeyax/how-to-get-rid-of-fake-followers-on-x-twitter-4o1g) for a detailed guide with screenshots on how to use this extension. 
+
+In short, follow these steps:
+
+1. [Install the extension](#installation) and pin it to your browser toolbar for easy access.
+2. After installing the extension for the first time, navigate to https://x.com/home at least once. This step is **crucial** for the extension to initialize itself. You will gracefully receive an error message if you forget this step.
+3. Open the extension and click 'scan' to analyze your followers list for unwanted accounts.
+4. Select the accounts you want to get rid of and then click the 'block' button at the top.
+5. Go grab a drink while the extension blocks all of the accounts you selected. This action can take a while depending on the amount of followers your selected and the configured timeout in the extension settings.
+
+You can fully customize the extension to your needs by right clicking the extension icon in Chrome (or click the 3-dots menu icon if you didn't pin the extension yet) and selecting 'Options'.
 
 ## FAQ
 
@@ -28,7 +47,10 @@ No, this extension is designed to help you block fake followers and bots on X. A
 
 Currently, only Chromium-based browsers (i.e. Chrome, Edge, Brave etc.) are supported. However, we are working on adding support for other browsers in the future. See the [project issues](https://github.com/sleeyax/x-bot-sweeper/issues?q=sort%3Aupdated-desc+is%3Aissue+is%3Aopen) tab to keep track of progress.
 
-## Development
+## Info for developers
+Skip this section if you are not interested in contributing to this project.
+
+### Development
 
 This is a [Plasmo extension](https://docs.plasmo.com/) project bootstrapped with [`plasmo init`](https://www.npmjs.com/package/plasmo).
 
@@ -52,7 +74,7 @@ You can start editing the popup by modifying `popup.tsx`. It should auto-update 
 
 For further guidance, [visit the Plasmo Documentation](https://docs.plasmo.com/)
 
-## Production
+### Production
 
 Run the following:
 

@@ -45,6 +45,10 @@ No, this extension is designed to help you block fake followers and bots on X. A
 
 Currently, only Chromium-based browsers (i.e. Chrome, Edge, Brave etc.) are supported. However, we are working on adding support for other browsers in the future. See the [project issues](https://github.com/sleeyax/x-bot-sweeper/issues?q=sort%3Aupdated-desc+is%3Aissue+is%3Aopen) tab to keep track of progress.
 
+**I followed the instructions but keep gettting the 'missing headers' error.**
+
+Log out from X and sign in again to fix this issue.
+
 ## Info for developers
 Skip this section if you are not interested in contributing to this project.
 

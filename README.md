@@ -1,3 +1,9 @@
+> [!WARNING]  
+> This project is no longer maintained due to the constantly changing X API. 
+> At the time of writing the extension still works if you build from source and manually update the API endpoints, but I no longer wish to maintain and publish such changes myself.
+> The extension has also been unpublished from the Chrome Web Store.
+> Sorry for the inconvenience.
+
 # X Bot Sweeper
 
 [![Available in the Chrome Web Store](https://storage.googleapis.com/web-dev-uploads/image/WlD8wC6g8khYWPJUsQceQkhXSlv1/UV4C4ybeBTsZt43U4xis.png)](https://chromewebstore.google.com/detail/x-bot-sweeper/fhhpkkpmedefldnkocodcmncpmocfbib)
